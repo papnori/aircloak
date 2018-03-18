@@ -4,10 +4,10 @@ import sys
 con = None
 try:
 
-    con = psycopg2.connect(database='bank', user='postgres', password='admin')
+    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
     cur = con.cursor()
-    #cur.execute('SELECT version()')
-    cur.execute('SELECT * FROM clients')
+
+    cur.execute('SELECT COUNT(*) FROM jan08')
     one = cur.fetchall()
     print(one)
 

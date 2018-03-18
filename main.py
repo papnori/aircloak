@@ -1,13 +1,20 @@
 import psycopg2
 import sys
 
+class Attribute:
+
+    def __init__(self, name, mi, ma):
+        self.name = name
+        self.minimum = mi
+        self.maximum = ma
+
 con = None
 try:
 
     con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
     cur = con.cursor()
 
-    cur.execute('SELECT COUNT(*) FROM jan08')
+    cur.execute('SELECT MAX(total_amount) FROM jan08')
     one = cur.fetchall()
     print(one)
 

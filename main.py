@@ -58,6 +58,9 @@ for i in range(matrixrownr):
             secondattributecurrentmin = secondattributecurrentmax
             secondattributecurrentmax = temp
     #building the querry
+    querry = 'SELECT COUNT(*) FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
+    if attributenr == 2:
+        querry = querry + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
     #querrying local db and filling the matrix
     #querrying remote db and filling the vector
 

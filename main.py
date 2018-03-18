@@ -1,6 +1,8 @@
 import psycopg2
 import sys
 import math
+import random
+import numpy
 
 class Attribute:
 
@@ -23,6 +25,7 @@ surcharge = Attribute('surcharge', 0.0, 3.0)
 tip = Attribute('tip_amount', 0.0, 165.0)
 toll = Attribute('tolls_amount', 0.0, 20.0)
 total = Attribute('total_amount', 2.5, 370.5)
+attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dropofflong, dropofflat, fare, surcharge, tip, toll, total]
 
 
 rownr = 440257
@@ -30,7 +33,33 @@ matrixrownr = rownr * pow(math.log10(rownr), 2)#not sure if its base 10, 2 or e
 matrix = []
 vector = []
 
-
+# cp builder loop
+for i in range(matrixrownr):
+    #random 5-15% (1-2)
+    attributenr = random.randint(1, 3)
+    #choosing which attributes to querry
+    firstattribute = attributes[random.randint(1, 14)]
+    if attributenr == 2:
+        secondattribute = attributes[random.randint(1, 14)]
+        while secondattribute == firstattribute:
+            secondattribute = attributes[random.randint(1, 14)]
+    #normal distribution min max
+    firstattributecurrentmin = numpy.random.normal((firstattribute.maximum - firstattribute.minimum)/2, 1)
+    firstattributecurrentmax = numpy.random.normal((firstattribute.maximum - firstattribute.minimum)/2, 1)
+    if firstattributecurrentmax < firstattributecurrentmin :
+        temp = firstattributecurrentmin
+        firstattributecurrentmin = firstattributecurrentmax
+        firstattributecurrentmax = temp
+    if attributenr == 2:
+        secondattributecurrentmin = numpy.random.normal((secondattribute.maximum - secondattribute.minimum)/2, 1)
+        secondattributecurrentmax = numpy.random.normal((secondattribute.maximum - secondattribute.minimum)/2, 1)
+        if secondattributecurrentmax < secondattributecurrentmin:
+            temp = secondattributecurrentmin
+            secondattributecurrentmin = secondattributecurrentmax
+            secondattributecurrentmax = temp
+    #building the querry
+    #querrying local db and filling the matrix
+    #querrying remote db and filling the vector
 
 #querrying
 con = None

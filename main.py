@@ -1,5 +1,6 @@
 import psycopg2
 import sys
+import math
 
 class Attribute:
 
@@ -8,7 +9,7 @@ class Attribute:
         self.minimum = mi
         self.maximum = ma
 
-con = None
+#creating attributes
 ratecode = Attribute('rate_code', 0, 6)
 passenger = Attribute('passenger_count', 0, 6)
 triptime = Attribute('trip_time_in_secs', 0, 10320)
@@ -22,6 +23,17 @@ surcharge = Attribute('surcharge', 0.0, 3.0)
 tip = Attribute('tip_amount', 0.0, 165.0)
 toll = Attribute('tolls_amount', 0.0, 20.0)
 total = Attribute('total_amount', 2.5, 370.5)
+
+
+rownr = 440257
+matrixrownr = rownr * pow(math.log10(rownr), 2)#not sure if its base 10, 2 or e
+matrix = []
+vector = []
+
+
+
+#querrying
+con = None
 try:
 
     con = psycopg2.connect(database='taxi', user='postgres', password='postgres')

@@ -29,7 +29,7 @@ attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dr
 
 
 rownr = 440257
-matrixrownr = rownr * pow(math.log10(rownr), 2)#not sure if its base 10, 2 or e
+matrixrownr = rownr * pow(math.log(rownr), 2)#not sure if its base 10, 2 or e
 matrix = []
 vector = []
 

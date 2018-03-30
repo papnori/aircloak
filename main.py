@@ -32,11 +32,13 @@ rownr = 440257
 matrixrownr = rownr * pow(math.log(rownr), 2)
 matrix = []
 vector = []
+attributenrvector = []
 
 # cp builder loop
 for i in range(matrixrownr):
     #random 5-15% (1-2)
     attributenr = random.randint(1, 3)
+    attributenrvector.append(attributenr)
     #choosing which attributes to querry
     firstattribute = attributes[random.randint(1, 14)]
     if attributenr == 2:
@@ -66,7 +68,8 @@ for i in range(matrixrownr):
         querrylocal = querrylocal + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
 
     #querrying local db and filling the matrix
-    #querrying remote db and filling the vector
+
+    #querrying remote db and filling the vector2
 
 #querrying
 con = None

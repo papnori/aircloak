@@ -29,7 +29,7 @@ attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dr
 
 
 rownr = 440257
-matrixrownr = rownr * pow(math.log(rownr), 2)#not sure if its base 10, 2 or e
+matrixrownr = rownr * pow(math.log(rownr), 2)
 matrix = []
 vector = []
 
@@ -58,9 +58,10 @@ for i in range(matrixrownr):
             secondattributecurrentmin = secondattributecurrentmax
             secondattributecurrentmax = temp
     #building the querry
-    querry = 'SELECT COUNT(*) FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
+    querryremote = 'SELECT COUNT(*) FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
     if attributenr == 2:
         querry = querry + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
+    
     #querrying local db and filling the matrix
     #querrying remote db and filling the vector
 

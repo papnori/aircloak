@@ -34,42 +34,6 @@ matrix = []
 vector = []
 attributenrvector = []
 
-# cp builder loop
-for i in range(matrixrownr):
-    #random 5-15% (1-2)
-    attributenr = random.randint(1, 3)
-    attributenrvector.append(attributenr)
-    #choosing which attributes to querry
-    firstattribute = attributes[random.randint(1, 14)]
-    if attributenr == 2:
-        secondattribute = attributes[random.randint(1, 14)]
-        while secondattribute == firstattribute:
-            secondattribute = attributes[random.randint(1, 14)]
-    #normal distribution min max
-    firstattributecurrentmin = numpy.random.normal((firstattribute.maximum - firstattribute.minimum)/2, 1)
-    firstattributecurrentmax = numpy.random.normal((firstattribute.maximum - firstattribute.minimum)/2, 1)
-    if firstattributecurrentmax < firstattributecurrentmin :
-        temp = firstattributecurrentmin
-        firstattributecurrentmin = firstattributecurrentmax
-        firstattributecurrentmax = temp
-    if attributenr == 2:
-        secondattributecurrentmin = numpy.random.normal((secondattribute.maximum - secondattribute.minimum)/2, 1)
-        secondattributecurrentmax = numpy.random.normal((secondattribute.maximum - secondattribute.minimum)/2, 1)
-        if secondattributecurrentmax < secondattributecurrentmin:
-            temp = secondattributecurrentmin
-            secondattributecurrentmin = secondattributecurrentmax
-            secondattributecurrentmax = temp
-    #building the querry
-    querryremote = 'SELECT COUNT(*) FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
-    if attributenr == 2:
-        querryremote = querryremote + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
-    querrylocal = 'SELECT id FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
-    if attributenr == 2:
-        querrylocal = querrylocal + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
-
-    #querrying local db and filling the matrix
-
-    #querrying remote db and filling the vector2
 
 #querrying
 con = None
@@ -77,6 +41,50 @@ try:
 
     con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
     cur = con.cursor()
+
+    # cp builder loop
+    for i in range(matrixrownr):
+        # random 5-15% (1-2)
+        attributenr = random.randint(1, 3)
+        # filling attributenrvector
+        attributenrvector.append(attributenr)
+        # choosing which attributes to querry
+        firstattribute = attributes[random.randint(1, 14)]
+        if attributenr == 2:
+            secondattribute = attributes[random.randint(1, 14)]
+            while secondattribute == firstattribute:
+                secondattribute = attributes[random.randint(1, 14)]
+        # normal distribution min max
+        firstattributecurrentmin = numpy.random.normal((firstattribute.maximum - firstattribute.minimum) / 2, 1)
+        firstattributecurrentmax = numpy.random.normal((firstattribute.maximum - firstattribute.minimum) / 2, 1)
+        if firstattributecurrentmax < firstattributecurrentmin:
+            temp = firstattributecurrentmin
+            firstattributecurrentmin = firstattributecurrentmax
+            firstattributecurrentmax = temp
+        if attributenr == 2:
+            secondattributecurrentmin = numpy.random.normal((secondattribute.maximum - secondattribute.minimum) / 2, 1)
+            secondattributecurrentmax = numpy.random.normal((secondattribute.maximum - secondattribute.minimum) / 2, 1)
+            if secondattributecurrentmax < secondattributecurrentmin:
+                temp = secondattributecurrentmin
+                secondattributecurrentmin = secondattributecurrentmax
+                secondattributecurrentmax = temp
+        # building the querry
+        querryremote = 'SELECT COUNT(*) FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
+        if attributenr == 2:
+            querryremote = querryremote + 'AND' + secondattribute.name + 'BETWEEN' + str( secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
+        querrylocal = 'SELECT id FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
+        if attributenr == 2:
+            querrylocal = querrylocal + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
+        # querrying local db and filling the matrix
+        cur.execute(querrylocal)
+        currentrow = []
+        while True:
+            row = cur.fetchone()
+            if row == None:
+                break
+            currentrow.append(row)
+        matrix.append(currentrow)
+         # querrying remote db and filling the vector
 
     cur.execute('SELECT MAX(total_amount) FROM jan08')
     one = cur.fetchall()

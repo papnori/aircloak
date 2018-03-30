@@ -86,9 +86,10 @@ try:
         matrix.append(currentrow)
          # querrying remote db and filling the vector
 
-    cur.execute('SELECT MAX(total_amount) FROM jan08')
-    one = cur.fetchall()
-    print(one)
+
+   # cur.execute('SELECT MAX(total_amount) FROM jan08')
+   # one = cur.fetchall()
+   # print(one)
 
 except psycopg2.DatabaseError as e:
     print('Error %s' % e)

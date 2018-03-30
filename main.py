@@ -60,8 +60,11 @@ for i in range(matrixrownr):
     #building the querry
     querryremote = 'SELECT COUNT(*) FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
     if attributenr == 2:
-        querry = querry + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
-    
+        querryremote = querryremote + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
+    querrylocal = 'SELECT id FROM jan08 WHERE' + firstattribute.name + 'BETWEEN' + str(firstattributecurrentmin) + 'AND' + str(firstattributecurrentmax)
+    if attributenr == 2:
+        querrylocal = querrylocal + 'AND' + secondattribute.name + 'BETWEEN' + str(secondattributecurrentmin) + 'AND' + str(secondattributecurrentmax)
+
     #querrying local db and filling the matrix
     #querrying remote db and filling the vector
 

@@ -3,6 +3,7 @@ import sys
 import math
 import random
 import numpy
+import scipy
 
 class Attribute:
 
@@ -28,7 +29,8 @@ total = Attribute('total_amount', 2.5, 370.5)
 attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dropofflong, dropofflat, fare, surcharge, tip, toll, total]
 
 
-rownr = 440257
+rownr=100
+#rownr = 440257
 matrixrownr = rownr * pow(math.log(rownr), 2)
 matrix = []
 vector = []
@@ -50,10 +52,9 @@ try:
         attributenrvector.append(attributenr)
         # choosing which attributes to querry
         randomom = random.randint(1, 14)
-        #print(randomom)
-        firstattribute = attributes[4]
+        firstattribute = attributes[randomom]
         if attributenr == 2:
-            secondattribute = attributes[6]
+            secondattribute = attributes[random.randint(1, 14)]
             while secondattribute == firstattribute:
                 secondattribute = attributes[random.randint(1, 14)]
         # normal distribution min max
@@ -86,6 +87,8 @@ try:
                 break
             currentrow.append(row)
         matrix.append(currentrow)
+        print(i)
+        print(matrix)
          # querrying remote db and filling the vector
 
 

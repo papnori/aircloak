@@ -39,7 +39,7 @@ attributenrvector = []
 con = None
 try:
 
-    con = psycopg2.connect(database='taxi', user='postgres', password='admin')
+    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
     cur = con.cursor()
 
     # cp builder loop
@@ -49,13 +49,11 @@ try:
         # filling attributenrvector
         attributenrvector.append(attributenr)
         # choosing which attributes to querry
-        randomom = random.randint(1, 14)
-        #print(randomom)
-        firstattribute = attributes[4]
+        firstattribute = attributes[random.randint(0, 12)]
         if attributenr == 2:
-            secondattribute = attributes[6]
+            secondattribute = attributes[random.randint(0, 12)]
             while secondattribute == firstattribute:
-                secondattribute = attributes[random.randint(1, 14)]
+                secondattribute = attributes[random.randint(0, 12)]
         # normal distribution min max
         firstattributecurrentmin = numpy.random.normal((firstattribute.maximum - firstattribute.minimum) / 2, 1)
         firstattributecurrentmax = numpy.random.normal((firstattribute.maximum - firstattribute.minimum) / 2, 1)
@@ -80,14 +78,18 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
+        j = 0
         while True:
             row = cur.fetchone()
             if row == None:
                 break
-            currentrow.append(row)
+            while(j < row[0]):
+                currentrow.append(0)
+                j = j + 1
+            currentrow.append(1)
+            j = j + 1
         matrix.append(currentrow)
          # querrying remote db and filling the vector
-
 
    # cur.execute('SELECT MAX(total_amount) FROM jan08')
    # one = cur.fetchall()

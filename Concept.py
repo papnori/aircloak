@@ -32,14 +32,14 @@ attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dr
 rownr = 440257
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
-fileName = 'main.h5'
+fileName = 'concept.h5'
 shape = (int(matrixrownr),rownr)
 atom = tables.UInt8Atom()
 filters = tables.Filters(complevel=5, complib='zlib')
 h5f = tables.open_file(fileName, 'w')
 ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
 
-#matrix = numpy.zeros(shape=(int(matrixrownr),rownr))
+matrix = numpy.zeros(shape=(int(matrixrownr),rownr))
 vector = []
 attributenrvector = []
 
@@ -98,14 +98,15 @@ try:
             if row == None:
                 break
             while(j < row[0]):
-                #currentrow.append(0)
-                ca[i, j] = 0
+                currentrow.append(0)
                 j = j + 1
-            #currentrow.append(1)
-            ca[i, j] = 1
+            currentrow.append(1)
             j = j + 1
-        #matrix[i] = currentrow
-         # querrying remote db and filling the vector
+        matrix[i] = currentrow
+        # querrying remote db and filling the vector
+        cur.execute(querryremote)
+        nr = cur.fetchone()
+        vector.append(nr)
 
 
    # cur.execute('SELECT MAX(total_amount) FROM jan08')

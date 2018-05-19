@@ -1,35 +1,22 @@
 from ortools.linear_solver import pywraplp
 
 def main():
-    """
+
   data = [
-    ['qegy', 0,0,1,1,0],
-    ['qketto', 1,1,0,0,1],
-    ['qharom', 0,0,0,0,1],
-    ['qnegy', 1,0,1,0,0],
-    ['qot', 0,0,0,0,1]
-  ];
+    ['qegy', 0, 1, 0, 1, 0],
+    ['qketto', 1, 1, 1, 1, 0],
+    ['qharom', 1, 1, 1, 1, 1],
+    ['qnegy', 0, 0, 0, 0, 0],
+    ['qot', 0, 0, 1, 0, 1]
+    ];
   nutrients = [
     ['egy', 2],
-    ['ketto', 1],
-    ['harom',0],
-    ['negy',2],
-    ['ot',0]
-  ]"""
-    data = [
-        ['qegy', 0, 1, 0, 1, 0],
-        ['qketto', 1, 1, 1, 1, 0],
-        ['qharom', 1, 1, 1, 1, 1],
-        ['qnegy', 0, 0, 0, 0, 0],
-        ['qot', 0, 0, 1, 0, 1]
-        ];
-    nutrients = [
-      ['egy', 2],
-      ['ketto', 2],
-      ['harom', 2],
-      ['negy', 0],
-      ['ot', 0]
-    ]
+    ['ketto', 2],
+    ['harom', 2],
+    ['negy', 0],
+    ['ot', 0]
+  ]
+
   # Instantiate a Glop solver, naming it SolveStigler.
   solver = pywraplp.Solver('SolveStigler',pywraplp.Solver.GLOP_LINEAR_PROGRAMMING)
   # Declare an array to hold our nutritional data.
@@ -40,9 +27,9 @@ def main():
   for i in range(0, len(data)):
     food[i] = solver.NumVar(0.0, 1.0, data[i][0])
     objective.SetCoefficient(food[i], 1)
-  objective.SetMinimization()
+  objective.SetMaximization()
 
-  epsilon = 0       #torzitas merteke
+  epsilon = 1       #torzitas merteke
   # Create the constraints, one per nutrient.
   constraints = [0] * len(nutrients)
   for i in range(0, len(nutrients)):

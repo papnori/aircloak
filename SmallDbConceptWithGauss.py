@@ -43,7 +43,7 @@ ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
 
 
 #vector = []
-vfileName = 'smallconceptresult.h5'
+vfileName = 'smallconceptwithgaussresult.h5'
 vshape = (int(matrixrownr), 1)
 vh5f = tables.open_file(vfileName, 'w')
 vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)

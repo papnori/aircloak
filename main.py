@@ -70,8 +70,8 @@ try:
             temp = firstattributecurrentmin
             firstattributecurrentmin = firstattributecurrentmax
             firstattributecurrentmax = temp
-        firstattributecurrentmin = firstattributecurrentmin * 0.4
-        firstattributecurrentmax = firstattributecurrentmax * 1.8
+        firstattributecurrentmin = firstattributecurrentmin * 0.1
+        firstattributecurrentmax = firstattributecurrentmax * 2
         if attributenr == 2:
             secondattributecurrentmin = numpy.random.normal((secondattribute.maximum - secondattribute.minimum) / 2, 1)
             secondattributecurrentmax = numpy.random.normal((secondattribute.maximum - secondattribute.minimum) / 2, 1)
@@ -79,8 +79,8 @@ try:
                 temp = secondattributecurrentmin
                 secondattributecurrentmin = secondattributecurrentmax
                 secondattributecurrentmax = temp
-            secondattributecurrentmin = secondattributecurrentmin * 0.4
-            secondattributecurrentmax = secondattributecurrentmax * 1.8
+            secondattributecurrentmin = secondattributecurrentmin * 0.1
+            secondattributecurrentmax = secondattributecurrentmax * 2
         # building the querry
         querryremote = 'SELECT COUNT(*) FROM jan08 WHERE ' + firstattribute.name + ' BETWEEN ' + str(firstattributecurrentmin) + ' AND ' + str(firstattributecurrentmax)
         if attributenr == 2:

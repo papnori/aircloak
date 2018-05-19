@@ -39,7 +39,7 @@ filters = tables.Filters(complevel=5, complib='zlib')
 h5f = tables.open_file(fileName, 'w')
 ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
 
-matrix = numpy.zeros(shape=(int(matrixrownr),rownr))
+#matrix = numpy.zeros(shape=(int(matrixrownr),rownr))
 
 
 vector = []
@@ -73,8 +73,8 @@ try:
             temp = firstattributecurrentmin
             firstattributecurrentmin = firstattributecurrentmax
             firstattributecurrentmax = temp
-        firstattributecurrentmin = firstattributecurrentmin * 0.4
-        firstattributecurrentmax = firstattributecurrentmax * 1.8
+        firstattributecurrentmin = firstattributecurrentmin * 0.1
+        firstattributecurrentmax = firstattributecurrentmax * 2
         if attributenr == 2:
             secondattributecurrentmin = numpy.random.normal((secondattribute.maximum - secondattribute.minimum) / 2, 1)
             secondattributecurrentmax = numpy.random.normal((secondattribute.maximum - secondattribute.minimum) / 2, 1)
@@ -82,8 +82,8 @@ try:
                 temp = secondattributecurrentmin
                 secondattributecurrentmin = secondattributecurrentmax
                 secondattributecurrentmax = temp
-            secondattributecurrentmin = secondattributecurrentmin * 0.4
-            secondattributecurrentmax = secondattributecurrentmax * 1.8
+            secondattributecurrentmin = secondattributecurrentmin * 0.1
+            secondattributecurrentmax = secondattributecurrentmax * 2
         # building the querry
         querryremote = 'SELECT COUNT(*) FROM jan08 WHERE ' + firstattribute.name + ' BETWEEN ' + str(firstattributecurrentmin) + ' AND ' + str(firstattributecurrentmax)
         if attributenr == 2:
@@ -95,17 +95,18 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
-        j = 0
         while True:
             row = cur.fetchone()
             if row == None:
                 break
             while(j < row[0]):
-                currentrow.append(0)
+                #currentrow.append(0)
+                ca[i, j] = 0
                 j = j + 1
-            currentrow.append(1)
+            #currentrow.append(1)
+            ca[i, j] = 1
             j = j + 1
-        matrix[i] = currentrow
+        #matrix[i] = currentrow
         # querrying remote db and filling the vector
         cur.execute(querryremote)
         nr = cur.fetchone()

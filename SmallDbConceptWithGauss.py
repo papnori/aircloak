@@ -33,7 +33,7 @@ rownr = 2000
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
 fileName = 'smallconceptwithgauss.h5'
-shape = (int(matrixrownr),rownr)
+shape = (int(matrixrownr),rownr + 1)
 atom = tables.UInt8Atom()
 filters = tables.Filters(complevel=5, complib='zlib')
 h5f = tables.open_file(fileName, 'w')
@@ -96,7 +96,8 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
-        j = 0
+        ca[i, 0] = str(i)
+        j = 1
         while True:
             row = cur.fetchone()
             if row == None:
@@ -106,19 +107,21 @@ try:
                 ca[i, j] = 0
                 j = j + 1
             #currentrow.append(1)
-            ca[i, j] = 1
+            if j < rownr & i < int(matrixrownr):
+                ca[i, j] = 1
             j = j + 1
         #matrix[i] = currentrow
         # querrying remote db and filling the vector
         cur.execute(querryremote)
         nr = cur.fetchone()
-        nr = nr + random.gauss(0, sigma)
-        vca[i, 0] = nr
+        a = int(nr[0])
+        a = a + random.gauss(0, int(sigma))
+        vca[i, 0] = a
 
 
-   # cur.execute('SELECT MAX(total_amount) FROM jan08')
-   # one = cur.fetchall()
-   # print(one)
+        # cur.execute('SELECT MAX(total_amount) FROM jan08')
+        # one = cur.fetchall()
+        # print(one)
 
 except psycopg2.DatabaseError as e:
     print('Error %s' % e)

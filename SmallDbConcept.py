@@ -29,7 +29,7 @@ total = Attribute('total_amount', 2.5, 370.5)
 attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dropofflong, dropofflat, fare, surcharge, tip, toll, total]
 
 
-rownr = 2000
+rownr = 100
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
 fileName = 'smallconcept.h5'
@@ -42,7 +42,7 @@ ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
 #matrix = numpy.zeros(shape=(int(matrixrownr),rownr))
 #vector = []
 vfileName = 'smallconceptresult.h5'
-vshape = (int(matrixrownr), 1)
+vshape = (int(matrixrownr), 2)
 vh5f = tables.open_file(vfileName, 'w')
 vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)
 
@@ -93,7 +93,7 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
-        ca[i, 0] = str(i)
+        ca[i, 0] = i
         j = 1
         while True:
             row = cur.fetchone()
@@ -113,7 +113,8 @@ try:
         # querrying remote db and filling the vector
         cur.execute(querryremote)
         nr = cur.fetchone()
-        vca[i, 0] = nr
+        vca[i, 0] = i + 100
+        vca[i, 1] = nr
         print(i)
 
 

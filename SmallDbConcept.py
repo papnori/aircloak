@@ -33,7 +33,7 @@ rownr = 2000
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
 fileName = 'smallconcept.h5'
-shape = (int(matrixrownr),rownr)
+shape = (int(matrixrownr),rownr + 1)
 atom = tables.UInt8Atom()
 filters = tables.Filters(complevel=5, complib='zlib')
 h5f = tables.open_file(fileName, 'w')
@@ -93,7 +93,8 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
-        j = 0
+        ca[i, 0] = str(i)
+        j = 1
         while True:
             row = cur.fetchone()
             if row == None:

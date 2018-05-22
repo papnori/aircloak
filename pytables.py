@@ -1,24 +1,36 @@
-
 from ortools.linear_solver import pywraplp
-from tables import *
-import numpy
+import tables
+import numpy as np
+import random
+import string
 
 def main():
 
-  data = [
-    ['qegy', 0,0,1,1,0],
-    ['qketto', 1,1,0,0,1],
-    ['qharom', 0,0,0,0,1],
-    ['qnegy', 1,0,1,0,0],
-    #['qot', 0,0,0,0,1]
-  ];
-  nutrients = [
-    ['egy', 2],
-    ['ketto', 1],
-    ['harom',0],
-    ['negy',2],
-    #['ot',0]
+  fileName = 'smallconceptwithgauss.h5'
+  fileNamer = 'smallconceptwithgaussresult.h5'
+  h5f = tables.open_file(fileName)
+  h5fr = tables.open_file(fileNamer)
+
+  data1 = np.array([
+    [0,0,1,1,0],
+    [1,1,0,0,1],
+    [0,0,0,0,1],
+    [1,0,1,0,0],
+    [0,0,0,0,1]
+  ]);
+  data = np.array(h5f.root.carray)
+  print(data)
+
+  nutrients1 = [
+    [2],
+    [1],
+    [0],
+    [2],
+    [0]
   ]
+  nutrients = np.array(h5fr.root.carray)
+  print(nutrients)
+
   # Instantiate a Glop solver, naming it SolveStigler.
   solver = pywraplp.Solver('SolveStigler',pywraplp.Solver.GLOP_LINEAR_PROGRAMMING)
   # Declare an array to hold our nutritional data.
@@ -27,7 +39,8 @@ def main():
   # Objective:
   objective = solver.Objective()
   for i in range(0, len(data)):
-    food[i] = solver.NumVar(0.0, 1.0, data[i][0])
+    #print(str(data[i][0]))
+    food[i] = solver.NumVar(0.0, 1.0, str(data[i][0]).join([random.choice(string.ascii_letters) for n in range(9)]))
     objective.SetCoefficient(food[i], 1)
   objective.SetMaximization()
 
@@ -35,9 +48,11 @@ def main():
   # Create the constraints, one per nutrient.
   constraints = [0] * len(nutrients)
   for i in range(0, len(nutrients)):
-    constraints[i] = solver.Constraint(nutrients[i][1] - epsilon, nutrients[i][1] + epsilon)
+    constraints[i] = solver.Constraint(int(nutrients[i][1] - epsilon), int(nutrients[i][1] + epsilon))
     for j in range(0, len(data)):
-        constraints[i].SetCoefficient(food[j], data[j][i+1])
+      #print(food[j])
+      print(j)
+      constraints[i].SetCoefficient(food[j], int(data[j][i+1]))
   # Solve!
   status = solver.Solve()
 
@@ -45,7 +60,7 @@ def main():
     num_nutrients = len(data[i]) - 1
     nutrients = [0] * (len(data[i]) - 1)
     for i in range(0, len(data)):
-      print(food[i].solution_value())
+      #print(food[i].solution_value())
 
       for nutrient in range(0, num_nutrients):
         nutrients[nutrient] = food[i].solution_value()
@@ -58,5 +73,8 @@ def main():
     else:
       print ('The solver could not solve the problem.')
 
+  h5f.close()
+
 if __name__ == '__main__':
   main()
+

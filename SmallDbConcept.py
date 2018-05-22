@@ -51,7 +51,7 @@ vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)
 con = None
 try:
 
-    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
+    con = psycopg2.connect(database='taxi', user='postgres', password='admin')
     cur = con.cursor()
 
     # cp builder loop

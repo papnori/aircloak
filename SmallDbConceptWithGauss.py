@@ -29,7 +29,7 @@ total = Attribute('total_amount', 2.5, 370.5)
 attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dropofflong, dropofflat, fare, surcharge, tip, toll, total]
 
 
-rownr = 2000
+rownr = 100
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
 fileName = 'smallconceptwithgauss.h5'
@@ -43,8 +43,14 @@ ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
 
 
 #vector = []
+#vfileName = 'smallconceptwithgaussresult.h5'
+#vshape = (int(matrixrownr), 1)
+#vh5f = tables.open_file(vfileName, 'w')
+#vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)
 vfileName = 'smallconceptwithgaussresult.h5'
-vshape = (int(matrixrownr), 1)
+vshape = (int(matrixrownr), 2)
+#vatom = tables.UInt8Atom()
+#filters = tables.Filters(complevel=5, complib='zlib')
 vh5f = tables.open_file(vfileName, 'w')
 vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)
 
@@ -54,11 +60,13 @@ sigma = input("please select sigma")
 con = None
 try:
 
-    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
+    con = psycopg2.connect(database='taxi', user='postgres', password='admin')
     cur = con.cursor()
 
     # cp builder loop
     for i in range(int(matrixrownr)):
+        if (i%500)== 0:
+            print(i)
         # random 5-15% (1-2)
         attributenr = random.randint(1, 3)
         # choosing which attributes to querry
@@ -96,7 +104,7 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
-        ca[i, 0] = str(i)
+        ca[i, 0] = i
         j = 1
         while True:
             row = cur.fetchone()
@@ -116,7 +124,8 @@ try:
         nr = cur.fetchone()
         a = int(nr[0])
         a = a + random.gauss(0, int(sigma))
-        vca[i, 0] = a
+        vca[i, 0] = i + 100
+        vca[i, 1] = a
 
 
         # cur.execute('SELECT MAX(total_amount) FROM jan08')

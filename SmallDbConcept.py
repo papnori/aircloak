@@ -57,7 +57,7 @@ eca = h5f.create_carray(eh5f.root, 'carray', atom, eshape, filters=filters)
 con = None
 try:
 
-    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
+    con = psycopg2.connect(database='taxi', user='postgres', password='admin')
     cur = con.cursor()
 
     k = 1

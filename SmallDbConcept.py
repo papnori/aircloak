@@ -4,6 +4,7 @@ import math
 import random
 import numpy
 import tables
+import string
 
 class Attribute:
 

@@ -4,6 +4,7 @@ import math
 import random
 import numpy
 import tables
+import string
 
 class Attribute:
 
@@ -93,7 +94,7 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
-        ca[i, 0] = i
+        ca[i, 0] = random.randint(1,9999999999)
         j = 1
         while True:
             row = cur.fetchone()
@@ -113,9 +114,9 @@ try:
         # querrying remote db and filling the vector
         cur.execute(querryremote)
         nr = cur.fetchone()
-        vca[i, 0] = i + 100
+        vca[i, 0] = pow(random.randint(1,999), random.randint(0,3)) + random.randint(1,9999)
         vca[i, 1] = nr
-        print(i)
+        print( vca[i, 0])
 
 
    # cur.execute('SELECT MAX(total_amount) FROM jan08')

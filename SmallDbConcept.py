@@ -29,12 +29,12 @@ total = Attribute('total_amount', 2.5, 370.5)
 attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dropofflong, dropofflat, fare, surcharge, tip, toll, total]
 
 
-rownr = 100
+rownr = 2000
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
 fileName = 'smallconcept.h5'
 shape = (int(matrixrownr),rownr + 1)
-atom = tables.UInt8Atom()
+atom = tables.UInt32Atom()
 filters = tables.Filters(complevel=5, complib='zlib')
 h5f = tables.open_file(fileName, 'w')
 ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
@@ -46,13 +46,33 @@ vshape = (int(matrixrownr), 2)
 vh5f = tables.open_file(vfileName, 'w')
 vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)
 
+efileName = 'smallconceptexpected.h5'
+eshape = (rownr, 2)
+eh5f = tables.open_file(efileName, 'w')
+eca = h5f.create_carray(eh5f.root, 'carray', atom, eshape, filters=filters)
+
 
 #querrying
 con = None
 try:
 
-    con = psycopg2.connect(database='taxi', user='postgres', password='admin')
+    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
     cur = con.cursor()
+
+    k = 1
+    while k < rownr:
+        expectedquery = 'SELECT trip_time_in_secs FROM jan08 WHERE id = ' + str(k)
+        print(k)
+        cur.execute(expectedquery)
+        value = cur.fetchone()
+        eca[k, 0] = k
+        if value[0] < 550:
+            eca[k, 1] = 1
+        else:
+            eca[k, 1] = 0
+        k = k + 1
+
+
 
     # cp builder loop
     for i in range(int(matrixrownr)):
@@ -93,14 +113,18 @@ try:
         # querrying local db and filling the matrix
         cur.execute(querrylocal)
         currentrow = []
+        print(i)
         ca[i, 0] = i
+        print(ca[i, 0])
         j = 1
         while True:
             row = cur.fetchone()
             if row == None:
                 break
-            while(j < row[0]):
+            while(j <= row[0]):
                 #currentrow.append(0)
+                #print(row[0])
+                #print(j)
                 ca[i, j] = 0
                # print(row[0])
                # print(j)
@@ -113,9 +137,10 @@ try:
         # querrying remote db and filling the vector
         cur.execute(querryremote)
         nr = cur.fetchone()
-        vca[i, 0] = i + 100
+        vca[i, 0] = i + 1000000
+        print(vca[i, 0])
         vca[i, 1] = nr
-        print(i)
+       # print(i)
 
 
    # cur.execute('SELECT MAX(total_amount) FROM jan08')

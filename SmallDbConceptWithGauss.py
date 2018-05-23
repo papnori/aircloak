@@ -29,12 +29,12 @@ total = Attribute('total_amount', 2.5, 370.5)
 attributes = [ratecode, passenger, triptime, distance, pickuplong, pickuplat, dropofflong, dropofflat, fare, surcharge, tip, toll, total]
 
 
-rownr = 100
+rownr = 2000
 matrixrownr = rownr * pow(math.log(rownr), 2)
 
 fileName = 'smallconceptwithgauss.h5'
 shape = (int(matrixrownr),rownr + 1)
-atom = tables.UInt8Atom()
+atom = tables.UInt32Atom()
 filters = tables.Filters(complevel=5, complib='zlib')
 h5f = tables.open_file(fileName, 'w')
 ca = h5f.create_carray(h5f.root, 'carray', atom, shape, filters=filters)
@@ -54,18 +54,36 @@ vshape = (int(matrixrownr), 2)
 vh5f = tables.open_file(vfileName, 'w')
 vca = vh5f.create_carray(vh5f.root, 'carray', atom, vshape, filters=filters)
 
+efileName = 'smallconceptwithgaussexpected.h5'
+eshape = (rownr, 2)
+eh5f = tables.open_file(efileName, 'w')
+eca = h5f.create_carray(eh5f.root, 'carray', atom, eshape, filters=filters)
+
 sigma = input("please select sigma")
 
 #querrying
 con = None
 try:
 
-    con = psycopg2.connect(database='taxi', user='postgres', password='admin')
+    con = psycopg2.connect(database='taxi', user='postgres', password='postgres')
     cur = con.cursor()
+
+    k = 1
+    while k < rownr:
+        expectedquery = 'SELECT trip_time_in_secs FROM jan08 WHERE id = ' + str(k)
+        print(k)
+        cur.execute(expectedquery)
+        value = cur.fetchone()
+        eca[k, 0] = k
+        if value[0] < 550:
+            eca[k, 1] = 1
+        else:
+            eca[k, 1] = 0
+        k = k + 1
 
     # cp builder loop
     for i in range(int(matrixrownr)):
-        if (i%500)== 0:
+        if (i%100)== 0:
             print(i)
         # random 5-15% (1-2)
         attributenr = random.randint(1, 3)
@@ -124,7 +142,7 @@ try:
         nr = cur.fetchone()
         a = int(nr[0])
         a = a + random.gauss(0, int(sigma))
-        vca[i, 0] = i + 100
+        vca[i, 0] = i + 1000000
         vca[i, 1] = a
 
 
